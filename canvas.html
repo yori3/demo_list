@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>Document</title>
+<style>
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none; 
+	box-sizing: border-box;
+}
+body,html{
+	font-size: 13px;
+	font-family:Avenir , "Open Sans" , "Helvetica Neue" , Helvetica , Arial , Verdana , Roboto , "游ゴシック" , "Yu Gothic" , "游ゴシック体" , "YuGothic" , "ヒラギノ角ゴ Pro W3" , "Hiragino Kaku Gothic Pro" , "Meiryo UI" , "メイリオ" , Meiryo , "ＭＳ Ｐゴシック" , "MS PGothic" , sans-serif;
+}
+h1{
+	margin-bottom: 15px;
+	padding-left: 3.125%;
+	font-size: 1.15rem;
+}
+.canvas_area{
+	width: 93.75%;
+	max-width: 1000px;
+	height: 60vh;
+	max-height: 1000px;
+	margin: 0 auto 20px;
+	border: 1px solid #ccc;
+}
+.color_list{
+	font-size: 0;
+	text-align: center;
+}
+.color_btn{
+	display: inline-block;
+	position: relative;
+	width: 50px;
+	height: 50px;
+	margin: 0 2%;
+	vertical-align: top;
+}
+[class*="black"]{background-color: rgba(0,0,0,1);}
+[class*="red"]{background-color: rgba(255,0,0,1);}
+[class*="blue"]{background-color: rgba(0,0,255,1);}
+.active:after{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 40px;
+	height: 40px;
+	border: 5px solid #ccc;
+	content: "";
+}
+.clear{
+	padding-top: 15px;
+	border: 1px solid #aaa;
+	font-size: 0.85rem;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+<section>
+	<h1>お絵かきコーナー</h1>
+	<div class="canvas_area">
+		<canvas id="canvas" width="1000" height="1000"></canvas>
+	</div>
+
+	<div class="color_change_area">
+		<ul class="color_list">
+			<li class="color_btn color-black active"></li>
+			<li class="color_btn color-red"></li>
+			<li class="color_btn color-blue"></li>
+			<li class="color_btn clear">clear</li>
+		</ul>
+	</div>
+</section>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+// var canvas = document.getElementById('canvas');
+// var context = canvas.getContext('2d');
+startX = 0;
+startY = 0;
+mouseDown=false;
+
+var areaW = $('.canvas_area').width();
+var areaH = $('.canvas_area').height();
+
+$('#canvas').attr('width',areaW).attr('height',areaH);
+// $('#canvas').on('touchend click',function(e){
+// 	canvasPosX = e.offsetX
+// 	canvasPosY = e.offsetY
+// 	console.log(canvasPosX + ',' + canvasPosY);
+
+// //左から20上から40の位置に、幅50高さ100の四角形を描く
+// context.fillRect(canvasPosX,canvasPosY,10,10); 
+
+// //色を指定する
+// context.strokeStyle = 'rgb(00,00,255)'; //枠線の色は青
+// context.fillStyle = 'rgb(255,00,00)'; //塗りつぶしの色は赤
+// });
+
+// $('#canvas').on('touchstart mousedown',function(e){
+// 	startX=e.offsetX;
+// 	startY=e.offsetY;
+// 	mouseDown=true;
+// 	console.log(startX,startY);
+// });
+
+
+// $('#canvas').on('touchmove mousemove',function(e){
+// 		if(mouseDown){
+// 			$(window).on('touchmove.noScroll', function(e) {
+//             e.preventDefault();
+//         });
+// 		draw(e.offsetX,e.offsetY);
+
+// 	$('#canvas').on('touchend mouseup',function(e){
+// 		mouseDown=false;
+// 		$(window).off('.noScroll');
+// 	});
+// 	}
+// });
+
+// //描画処理//
+
+// function draw(xPos,yPos){
+// 	var target=document.getElementById('canvas');
+// 	var context=target.getContext('2d');
+// 	context.beginPath();
+// 	context.moveTo(startX,startY);
+// 	context.lineTo(x,y);
+// 	context.closePath();
+// 	context.stroke();
+// 	context.strokeStyle = 'rgba(200,200,200,1)'
+
+// 	//次の座標の出発点を設定
+// 	startX=x;  
+// 	startY=y;
+// 	}
+
+var headingH = $('h1').innerHeight();
+LINE = 'rgb(0,0,0)';
+$('[class*="color-"]').on('click touchstart',function(){
+	LINE = $(this).css('background-color');
+	$('.active').removeClass('active');
+	$(this).addClass('active');
+	console.log(LINE);
+});
+$('.clear').on('click touchstart',function(){
+	var canvas = document.getElementById('canvas');
+	var ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, areaW, areaH)
+});
+
+window.onload = function() {
+	var canvas = document.getElementById('canvas');
+	canvas.addEventListener("touchstart", touchStart, false);
+	canvas.addEventListener("touchmove", touchMove, false);
+	canvas.addEventListener("touchend", touchEnd, false);
+	// 一応、PCでも動く様にそっちのイベントにも対応させておく
+	canvas.addEventListener("mousedown", touchStart, false);
+	canvas.addEventListener("mousemove", touchMove, false);
+	canvas.addEventListener("mouseup", touchEnd, false);
+	// 画面スクロールの抑止
+	document.body.ontouchstart = function(e) { e.preventDefault(); };
+}
+
+
+function drawLine(x1, y1, x2, y2) {
+	var canvas = document.getElementById('canvas');
+	var ctx = canvas.getContext('2d');
+	ctx.beginPath();
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.strokeStyle = LINE 
+}
+
+function touchStart(event) {
+	mouse_down = true;
+	if (event.touches) {
+		pos_x = event.touches[0].pageX - headingH;
+		pos_y = event.touches[0].pageY - headingH;
+	} else {
+		pos_x = event.layerX;
+		pos_y = event.layerY;
+	}
+}
+function touchMove(event) {
+	var x;
+	var y;
+	if (!mouse_down) return;
+	if (event.touches) {
+		x = event.touches[0].pageX - headingH;
+		y = event.touches[0].pageY - headingH;
+	} else {
+		x = event.layerX;
+		y = event.layerY;
+	}
+	
+	drawLine(pos_x, pos_y, x, y);
+	pos_x = x;
+	pos_y = y;
+}
+
+function touchEnd(event) {
+	mouse_down = false;
+}
+
+function draw() {
+}
+
+</script>
+</body>
+</html>
