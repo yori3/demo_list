@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,maximum-scale=1">
+	<title>Document</title>
+<style>
+body{
+	max-width: 640px;
+	min-height: 100vh;
+	margin: 0 auto;
+	box-shadow: 1px 1px 5px #ddd;
+}
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+header{
+  width: 100%;
+  height: 50px;
+  background-color: #111;
+}
+nav {
+  width: 100%;
+}
+nav > ul > li {
+	position: relative;
+  width: 100%;
+}
+nav > ul > li:after{
+	display: block;
+	position: absolute;
+	top: 50%;
+	right: 5%;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #989897;
+	transform: translate(10%,-50%);
+	content: "";
+}
+nav > ul > li.current:after{
+	top: 5%;
+	height: 90%;
+	border-radius: 10px;
+	transform: translate(10%,0);
+	animation: accodion .5s linear;
+}
+@keyframes accodion{
+	0%{
+		top: 10%;
+		height: 25px;
+		border-radius: 10px;
+		transform: translate(10%,0);
+	}
+	25%{
+		top: 5%;
+		height: 60%;
+		border-radius: 10px;
+		transform: translate(10%,0);
+	}
+	100%{
+		top: 5%;
+		height: 90%;
+		border-radius: 10px;
+		transform: translate(10%,0);
+	}
+}
+nav > ul > li.others:after{
+	top: 50%;
+	height: 25px;
+	border-radius: 50%;
+	transform: translate(10%,-50%);
+	animation: accodionAlter .5s linear;
+}
+@keyframes accodionAlter{
+	0%{
+		top: 5%;
+		height: 90%;
+		border-radius: 10px;
+		transform: translate(10%,0%);
+	}
+	25%{
+		top: 5%;
+		height: 90%;
+		border-radius: 10px;
+		transform: translate(10%,-5%);
+	}
+	100%{
+		top: 50%;
+		height: 25px;
+		border-radius: 50%;
+		transform: translate(10%,-50%);
+	}
+}
+nav > ul > li > a {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+}
+nav > ul > li > a:after{
+	display: block;
+	position: absolute;
+	top: 50%;
+	right: 5%;
+	width: 20px;
+	height: 5px;
+	background: #fff;
+	transform: translateY(-50%) rotate(0deg);
+	transition: .5s;
+	content: "";
+	z-index: 1;
+}
+nav > ul > li > a.open:after{
+	transform: translateY(-50%) rotate(180deg);
+}
+nav > ul > li > a:before{
+	display: block;
+	position: absolute;
+	top: 50%;
+	right: 5%;
+	width: 5px;
+	height: 20px;
+	background: #fff;
+	transform: translate(-150%,-50%) rotate(0deg);
+	transition: .5s;
+	content: "";
+	z-index: 1;
+}
+nav > ul > li > a.open:before{
+	transform: translate(-150%,-50%) rotate(90deg);
+}
+nav > ul > li:first-child > a{border-top: 1px solid #ccc;}
+nav > ul > li > ul {
+  display: none;
+}
+nav > ul > li li > a {
+  display: block;
+  width: 100%;
+  padding: 10px 5%;
+  border-bottom: 1px solid #ccc;
+  background-color: #111;
+  color: #fff;
+}
+
+</style>
+</head>
+<body>
+<header></header>
+<section>
+	<nav>
+		<ul>
+			<li><a href="">nav01</a>
+				<ul>
+					<li><a href="">list01</a></li>
+					<li><a href="">list02</a></li>
+					<li><a href="">list03</a></li>
+				</ul>
+			</li>
+			<li><a href="">nav02</a>
+				<ul>
+					<li><a href="">list01</a></li>
+					<li><a href="">list02</a></li>
+					<li><a href="">list03</a></li>
+				</ul>
+			</li>
+			<li><a href="">nav03</a>
+				<ul>
+					<li><a href="">list01</a></li>
+					<li><a href="">list02</a></li>
+					<li><a href="">list03</a></li>
+				</ul>
+			</li>
+			<li><a href="">nav04</a>
+				<ul>
+					<li><a href="">list01</a></li>
+					<li><a href="">list02</a></li>
+					<li><a href="">list03</a></li>
+				</ul>
+			</li>
+			<li><a href="">nav05</a>
+				<ul>
+					<li><a href="">list01</a></li>
+					<li><a href="">list02</a></li>
+					<li><a href="">list03</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+</section>
+
+
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script>
+$('nav').prepend('<div class="toggle">menu</div>');
+$('.toggle').css({
+	'width':'100%',
+	'height':'50px',
+	'background-color':'#999',
+	'color':'#fff',
+	'text-align':'center',
+	'line-height':'50px'
+});
+$('.toggle').show();
+$('nav>ul').hide();
+
+$('.toggle').on('click',function(){
+	$(this).next('ul').slideToggle();
+	$('.open').removeClass('open');
+	$('nav>ul>li>a').next('ul').slideUp();
+	operner =close;
+});
+
+
+var opener = close;//flagでクリックしたときのアコーディオンの開くまでの時間を調節
+$('nav>ul>li>a').on('click',function(){
+		if($(this).hasClass('open')){//クリックした要素がopenクラスを持っているなら
+			$(this).removeClass('open');
+			$('.current').addClass('others').removeClass('current');
+			$(this).next('ul').slideUp();
+			opener = close;
+		} else{//クリックした要素がopenクラスを持っていないなら
+			var timer;//アコーディオンが開くまでの遅延時間
+			console.log(opener);
+			if(opener !== close){
+				timer = 500;
+			}else{
+				timer = 0;
+			}
+			$('.open').removeClass('open');
+			$('.current').addClass('others').removeClass('current');
+			$('nav>ul>li>a').next('ul').slideUp();
+			setTimeout(()=>{
+				$(this).addClass('open');
+				$(this).parent('li').addClass('current').removeClass('others');
+				$(this).next('ul').slideDown();
+			},timer);
+			opener = open;
+		}
+		event.preventDefault();
+});
+</script>
+</body>
+</html>
