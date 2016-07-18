@@ -43,6 +43,7 @@ h1{
 [class*="black"]{background-color: rgba(0,0,0,1);}
 [class*="red"]{background-color: rgba(255,0,0,1);}
 [class*="blue"]{background-color: rgba(0,0,255,1);}
+[class*="white"]{background-color: rgba(255,255,255,1);}
 .active:after{
 	position: absolute;
 	top: 0px;
@@ -72,6 +73,7 @@ h1{
 			<li class="color_btn color-black active"></li>
 			<li class="color_btn color-red"></li>
 			<li class="color_btn color-blue"></li>
+			<li class="color_btn color-white"></li>
 			<li class="color_btn clear">clear</li>
 		</ul>
 	</div>
@@ -90,57 +92,7 @@ var areaW = $('.canvas_area').width();
 var areaH = $('.canvas_area').height();
 
 $('#canvas').attr('width',areaW).attr('height',areaH);
-// $('#canvas').on('touchend click',function(e){
-// 	canvasPosX = e.offsetX
-// 	canvasPosY = e.offsetY
-// 	console.log(canvasPosX + ',' + canvasPosY);
 
-// //左から20上から40の位置に、幅50高さ100の四角形を描く
-// context.fillRect(canvasPosX,canvasPosY,10,10); 
-
-// //色を指定する
-// context.strokeStyle = 'rgb(00,00,255)'; //枠線の色は青
-// context.fillStyle = 'rgb(255,00,00)'; //塗りつぶしの色は赤
-// });
-
-// $('#canvas').on('touchstart mousedown',function(e){
-// 	startX=e.offsetX;
-// 	startY=e.offsetY;
-// 	mouseDown=true;
-// 	console.log(startX,startY);
-// });
-
-
-// $('#canvas').on('touchmove mousemove',function(e){
-// 		if(mouseDown){
-// 			$(window).on('touchmove.noScroll', function(e) {
-//             e.preventDefault();
-//         });
-// 		draw(e.offsetX,e.offsetY);
-
-// 	$('#canvas').on('touchend mouseup',function(e){
-// 		mouseDown=false;
-// 		$(window).off('.noScroll');
-// 	});
-// 	}
-// });
-
-// //描画処理//
-
-// function draw(xPos,yPos){
-// 	var target=document.getElementById('canvas');
-// 	var context=target.getContext('2d');
-// 	context.beginPath();
-// 	context.moveTo(startX,startY);
-// 	context.lineTo(x,y);
-// 	context.closePath();
-// 	context.stroke();
-// 	context.strokeStyle = 'rgba(200,200,200,1)'
-
-// 	//次の座標の出発点を設定
-// 	startX=x;  
-// 	startY=y;
-// 	}
 
 var headingH = $('h1').innerHeight();
 LINE = 'rgb(0,0,0)';
