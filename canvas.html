@@ -31,20 +31,20 @@ h1{
 	width: 100%;
 	margin-bottom: 15px;
 	padding-left: 3.125%;
-	font-size: 3rem;
+	font-size: 2rem;
 	text-align: center;
 	transform: translateY(-50%);
 }
 .canvas_area{
 	width: 93.75%;
 	max-width: 1000px;
-	height: 60vh;
+	height: 50vh;
 	max-height: 1000px;
 	margin: 20px auto;
 	border: 1px solid #ccc;
 }
 [class*="_btn_list"]{
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	font-size: 0;
 	text-align: center;
 }
@@ -158,7 +158,7 @@ $('.clear').on('click touchstart',function(){
 	var ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, areaW, areaH)
 });
-$('.size_btn_item').on('click',function(){
+$('.size_btn_item').on('click touchstart',function(){
 	lineW = $(this).data('size');
 });
 
