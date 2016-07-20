@@ -15,24 +15,40 @@ body,html{
 	font-size: 13px;
 	font-family:Avenir , "Open Sans" , "Helvetica Neue" , Helvetica , Arial , Verdana , Roboto , "游ゴシック" , "Yu Gothic" , "游ゴシック体" , "YuGothic" , "ヒラギノ角ゴ Pro W3" , "Hiragino Kaku Gothic Pro" , "Meiryo UI" , "メイリオ" , Meiryo , "ＭＳ Ｐゴシック" , "MS PGothic" , sans-serif;
 }
+#op{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: #fff;
+	z-index: 200;
+}
 h1{
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
 	margin-bottom: 15px;
 	padding-left: 3.125%;
-	font-size: 1.15rem;
+	font-size: 3rem;
+	text-align: center;
+	transform: translateY(-50%);
 }
 .canvas_area{
 	width: 93.75%;
 	max-width: 1000px;
 	height: 60vh;
 	max-height: 1000px;
-	margin: 0 auto 20px;
+	margin: 20px auto;
 	border: 1px solid #ccc;
 }
-.color_list{
+[class*="_btn_list"]{
+	margin-bottom: 20px;
 	font-size: 0;
 	text-align: center;
 }
-.color_btn{
+[class*="_btn_item"]{
 	display: inline-block;
 	position: relative;
 	width: 48px;
@@ -40,6 +56,13 @@ h1{
 	margin: 0 2%;
 	border: 1px solid #ccc;
 	vertical-align: top;
+}
+.size_btn_item{
+	background-color: #fff;
+	padding-top: 15px;
+	color: #000;
+	font-size: 1rem;
+	text-align: center;
 }
 [class*="black"]{background-color: rgba(0,0,0,1);}
 [class*="red"]{background-color: rgba(255,0,0,1);}
@@ -63,19 +86,29 @@ h1{
 </style>
 </head>
 <body>
-<section>
+<section id="op">
 	<h1>お絵かきコーナー</h1>
+</section>
+
+<section>
 	<div class="canvas_area">
 		<canvas id="canvas" width="1000" height="1000"></canvas>
 	</div>
 
 	<div class="color_change_area">
-		<ul class="color_list">
-			<li class="color_btn color-black active"></li>
-			<li class="color_btn color-red"></li>
-			<li class="color_btn color-blue"></li>
-			<li class="color_btn color-white"></li>
-			<li class="color_btn clear">clear</li>
+		<ul class="color_btn_list">
+			<li class="color_btn_item color-black active"></li>
+			<li class="color_btn_item color-red"></li>
+			<li class="color_btn_item color-blue"></li>
+			<li class="color_btn_item color-white"></li>
+			<li class="color_btn_item clear">clear</li>
+		</ul>
+	</div>
+	<div class="size_change_area">
+		<ul class="size_btn_list">
+			<li class="size_btn_item" data-size="1">1</li>
+			<li class="size_btn_item" data-size="5">5</li>
+			<li class="size_btn_item" data-size="10">10</li>
 		</ul>
 	</div>
 </section>
@@ -83,8 +116,13 @@ h1{
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
-// var canvas = document.getElementById('canvas');
-// var context = canvas.getContext('2d');
+$(function(){
+	setTimeout(function(){
+		$('#op').fadeOut(1000);
+	},3000);
+});
+
+
 startX = 0;
 startY = 0;
 mouseDown=false;
@@ -95,18 +133,27 @@ var areaH = $('.canvas_area').height();
 $('#canvas').attr('width',areaW).attr('height',areaH);
 
 
-var headingH = $('h1').innerHeight();
+var headingH = 20;
 LINE = 'rgb(0,0,0)';
+lineW = 1;
 $('[class*="color-"]').on('click touchstart',function(){
 	LINE = $(this).css('background-color');
 	$('.active').removeClass('active');
 	$(this).addClass('active');
 	console.log(LINE);
+	if($(this).is('.color-white')){
+		lineW = 10;
+	}else{
+		lineW = 1;
+	}
 });
 $('.clear').on('click touchstart',function(){
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, areaW, areaH)
+});
+$('.size_btn_item').on('click',function(){
+	lineW = $(this).data('size');
 });
 
 window.onload = function() {
@@ -131,6 +178,7 @@ function drawLine(x1, y1, x2, y2) {
 	ctx.lineTo(x2, y2);
 	ctx.closePath();
 	ctx.stroke();
+	ctx.lineWidth = lineW;
 	ctx.strokeStyle = LINE 
 }
 
@@ -163,9 +211,6 @@ function touchMove(event) {
 
 function touchEnd(event) {
 	mouse_down = false;
-}
-
-function draw() {
 }
 
 </script>
