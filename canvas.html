@@ -144,7 +144,7 @@ LINE = 'rgb(0,0,0)';
 lineW = 1;
 $('[class*="color-"]').on('click touchstart',function(){
 	LINE = $(this).css('background-color');
-	$('.active').removeClass('active');
+	$('.color_btn_list').children('.active').removeClass('active');
 	$(this).addClass('active');
 	console.log(LINE);
 	if($(this).is('.color-white')){
@@ -160,7 +160,7 @@ $('.clear').on('click touchstart',function(){
 });
 $('.size_btn_item').on('click touchstart',function(){
 	lineW = $(this).data('size');
-	$('.active').removeClass('active');
+	$('.size_btn_list').children('.active').removeClass('active');
 	$(this).addClass('active');
 });
 
