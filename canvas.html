@@ -112,7 +112,7 @@ h1{
 	<div class="size_change_area">
 		<p class="btn_caption">ペンの太さ</p>
 		<ul class="size_btn_list">
-			<li class="size_btn_item" data-size="1">nomal</li>
+			<li class="size_btn_item active" data-size="1">normal</li>
 			<li class="size_btn_item" data-size="4">middle</li>
 			<li class="size_btn_item" data-size="7">bold</li>
 		</ul>
@@ -160,6 +160,8 @@ $('.clear').on('click touchstart',function(){
 });
 $('.size_btn_item').on('click touchstart',function(){
 	lineW = $(this).data('size');
+	$('.active').removeClass('active');
+	$(this).addClass('active');
 });
 
 window.onload = function() {
