@@ -43,6 +43,14 @@ h1{
 	margin: 20px auto;
 	border: 1px solid #ccc;
 }
+
+#control_panel{
+	position: fixed;
+	left: 50%;
+	bottom: 10vh;
+	transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+}
 [class*="_btn_list"]{
 	margin-bottom: 10px;
 	font-size: 0;
@@ -91,42 +99,53 @@ h1{
 </style>
 </head>
 <body>
-<section id="op">
+<!-- <section id="op">
 	<h1>お絵かきコーナー</h1>
-</section>
+</section> -->
 
 <section>
 	<div class="canvas_area">
 		<canvas id="canvas" width="1000" height="1000"></canvas>
 	</div>
 
-	<div class="color_change_area">
-		<ul class="color_btn_list">
-			<li class="color_btn_item color-black active"></li>
-			<li class="color_btn_item color-red"></li>
-			<li class="color_btn_item color-blue"></li>
-			<li class="color_btn_item color-white"></li>
-			<li class="color_btn_item clear">clear</li>
-		</ul>
-	</div>
-	<div class="size_change_area">
-		<p class="btn_caption">ペンの太さ</p>
-		<ul class="size_btn_list">
-			<li class="size_btn_item active" data-size="1">normal</li>
-			<li class="size_btn_item" data-size="4">middle</li>
-			<li class="size_btn_item" data-size="7">bold</li>
-		</ul>
-	</div>
+	<aside id="control_panel">
+		<div class="control_box">
+			<div class="color_change_area">
+				<h3 class="btn_caption">ペンの色</h3>
+				<ul class="color_btn_list">
+					<li class="color_btn_item color-black active"></li>
+					<li class="color_btn_item color-red"></li>
+					<li class="color_btn_item color-blue"></li>
+					<li class="color_btn_item color-white"></li>
+				</ul>
+			</div>
+			<div class="size_change_area">
+				<h3 class="btn_caption">ペンの太さ</h3>
+				<ul class="size_btn_list">
+					<li class="size_btn_item" data-size="1">thin</li>
+					<li class="size_btn_item active" data-size="3">normal</li>
+					<li class="size_btn_item" data-size="6">bold</li>
+				</ul>
+			</div>
+		</div>
+		<div class="parameter_box">
+			<div class="color_parameter_item"></div>
+			<div class="size_parameter_item"></div>
+			<div class="clear_parameter_item clear">clear</div>
+			<div class="btn_toggle"><span class="toggle_line"></span></div>
+		</div>
+	</aside>
+	
 </section>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
-$(function(){
-	setTimeout(function(){
-		$('#op').fadeOut(1000);
-	},3000);
-});
+// $(function(){
+// 	setTimeout(function(){
+// 		$('#op').fadeOut(1000);
+// 	},3000);
+// });
 
 
 startX = 0;
@@ -141,7 +160,7 @@ $('#canvas').attr('width',areaW).attr('height',areaH);
 
 var headingH = 20;
 LINE = 'rgb(0,0,0)';
-lineW = 1;
+lineW = $('.size_btn_list').children('.active').data('size');
 $('[class*="color-"]').on('click touchstart',function(){
 	LINE = $(this).css('background-color');
 	$('.color_btn_list').children('.active').removeClass('active');
@@ -150,7 +169,7 @@ $('[class*="color-"]').on('click touchstart',function(){
 	if($(this).is('.color-white')){
 		lineW = 10;
 	}else{
-		lineW = 1;
+		lineW = $('.size_btn_list').children('.active').data('size');
 	}
 });
 $('.clear').on('click touchstart',function(){
