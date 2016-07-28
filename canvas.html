@@ -15,30 +15,11 @@ body,html{
 	font-size: 13px;
 	font-family:Avenir , "Open Sans" , "Helvetica Neue" , Helvetica , Arial , Verdana , Roboto , "游ゴシック" , "Yu Gothic" , "游ゴシック体" , "YuGothic" , "ヒラギノ角ゴ Pro W3" , "Hiragino Kaku Gothic Pro" , "Meiryo UI" , "メイリオ" , Meiryo , "ＭＳ Ｐゴシック" , "MS PGothic" , sans-serif;
 }
-#op{
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100vh;
-	background-color: #fff;
-	z-index: 200;
-}
-h1{
-	position: absolute;
-	top: 50%;
-	left: 0;
-	width: 100%;
-	margin-bottom: 15px;
-	padding-left: 3.125%;
-	font-size: 2rem;
-	text-align: center;
-	transform: translateY(-50%);
-}
+
+
 .canvas_area{
 	width: 93.75%;
 	max-width: 1000px;
-	height: 50vh;
 	max-height: 1000px;
 	margin: 20px auto;
 	border: 1px solid #ccc;
@@ -47,10 +28,95 @@ h1{
 #control_panel{
 	position: fixed;
 	left: 50%;
-	bottom: 10vh;
+	bottom: 5%;
+	width: 95%;
+	background-color: rgba(0,0,0,0.5);
 	transform: translateX(-50%);
 	-webkit-transform: translateX(-50%);
+	z-index: 100
 }
+
+.control_box{
+	display: none;
+	width: 100%;
+	padding: 5%;
+	border-bottom: 1px solid #fff;
+}
+.control_box.show{display: block;}
+.parameter_box{
+	position: relative;
+	width: 100%;
+	padding: 5%;
+	font-size: 0;
+}
+
+[class*="_parameter_item"]{
+	display: inline-block;
+	width: 48px;
+	height: 48px;
+	margin: 0 2%;
+	border: 1px solid #ccc;
+	vertical-align: top;
+}
+.btn_toggle{
+	position: absolute;
+	right: 5%;
+	top: 50%;
+	width: 50px;
+	height: 50px;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+}
+.btn_toggle .toggle_line {
+  display: block;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 25px;
+  height: 2px;
+  border-radius: 20px;
+  background-color: #fff; 
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+}
+.btn_toggle .toggle_line::before {
+  display: block;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  border-radius: 20px;
+  background-color: #fff;
+  content: "";
+  transition: .5s; 
+}
+.btn_toggle .toggle_line::after {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  border-radius: 20px;
+  background-color: #fff;
+  content: "";
+  transition: .5s; 
+}
+.btn_toggle.open .toggle_line {
+  background-color: transparent; 
+}
+.btn_toggle.open .toggle_line::before {
+  top: 0;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg); 
+}
+.btn_toggle.open .toggle_line::after {
+  top: 0;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg); 
+}
+
 [class*="_btn_list"]{
 	margin-bottom: 10px;
 	font-size: 0;
@@ -65,7 +131,7 @@ h1{
 	border: 1px solid #ccc;
 	vertical-align: top;
 }
-.size_btn_item{
+.size_btn_item,.size_parameter_item{
 	background-color: #fff;
 	padding-top: 15px;
 	color: #000;
@@ -88,10 +154,12 @@ h1{
 .clear{
 	padding-top: 15px;
 	border: 1px solid #aaa;
+	background-color: #fff;
 	font-size: 0.85rem;
 	text-align: center;
 }
 .btn_caption{
+	color: #fff;
 	font-size: 1rem;
 	margin-bottom: 5px;
 	text-align: center;
@@ -99,9 +167,7 @@ h1{
 </style>
 </head>
 <body>
-<!-- <section id="op">
-	<h1>お絵かきコーナー</h1>
-</section> -->
+
 
 <section>
 	<div class="canvas_area">
@@ -141,12 +207,19 @@ h1{
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
-// $(function(){
-// 	setTimeout(function(){
-// 		$('#op').fadeOut(1000);
-// 	},3000);
-// });
 
+$('.btn_toggle').on('click touchstart',function(){
+	var winW = $(window).width();
+	if($('.btn_toggle').hasClass('open')){
+		// $('.control_box').removeClass('show');
+		$('.control_box').animate({height:'hide'});
+		$(this).removeClass('open');
+	}else{
+		// $('.control_box').addClass('show');
+		$('.control_box').animate({height:'show'});
+		$(this).addClass('open');
+	}
+});
 
 startX = 0;
 startY = 0;
@@ -154,13 +227,20 @@ mouseDown=false;
 
 var areaW = $('.canvas_area').width();
 var areaH = $('.canvas_area').height();
+var winH = $(window).height();
 
-$('#canvas').attr('width',areaW).attr('height',areaH);
+$('.canvas_area').css({'height':(winH * 0.7)});
+$('#canvas').attr('width',areaW).attr('height',(winH * 0.7));
 
 
 var headingH = 20;
 LINE = 'rgb(0,0,0)';
 lineW = $('.size_btn_list').children('.active').data('size');
+sizeTxt = $('.size_btn_list').children('.active').text();
+
+$('.color_parameter_item').css({'background-color':LINE});
+$('.size_parameter_item').text(sizeTxt);
+
 $('[class*="color-"]').on('click touchstart',function(){
 	LINE = $(this).css('background-color');
 	$('.color_btn_list').children('.active').removeClass('active');
@@ -171,6 +251,7 @@ $('[class*="color-"]').on('click touchstart',function(){
 	}else{
 		lineW = $('.size_btn_list').children('.active').data('size');
 	}
+	$('.color_parameter_item').css({'background-color':LINE});
 });
 $('.clear').on('click touchstart',function(){
 	var canvas = document.getElementById('canvas');
@@ -179,8 +260,10 @@ $('.clear').on('click touchstart',function(){
 });
 $('.size_btn_item').on('click touchstart',function(){
 	lineW = $(this).data('size');
+	sizeTxt = $(this).text();
 	$('.size_btn_list').children('.active').removeClass('active');
 	$(this).addClass('active');
+	$('.size_parameter_item').text(sizeTxt);
 });
 
 window.onload = function() {
